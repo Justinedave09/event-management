@@ -2,7 +2,7 @@
 $records = getUserRecords();
 $utype = '';
 $type = $_SESSION['calendar_fd_user']['type'];
-if($type == 'admin' || $type == 'teacher') {
+if($type == 'admin' || $type == 'staff') {
 	$utype = 'on';
 }
 ?>
@@ -10,7 +10,14 @@ if($type == 'admin' || $type == 'teacher') {
 <div class="col-md-12">
   <div class="box">
     <div class="box-header with-border">
-      <h3 class="box-title">User details</h3>
+      <h3 class="box-title">Pet Owners</h3>
+      <div class="box-tools pull-right">
+        <?php if($type == 'admin' || $type == 'staff') { ?>
+        <a href="<?php echo WEB_ROOT; ?>views/?v=CREATE" class="btn btn-primary btn-sm">
+          <i class="fa fa-plus"></i> Add Pet Owner
+        </a>
+        <?php } ?>
+      </div>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
@@ -43,7 +50,7 @@ if($type == 'admin' || $type == 'teacher') {
           <td><?php echo $user_phone; ?></td>
          
           <td>
-		  <i class="fa <?php echo $type == 'teacher' ? 'fa-user' : 'fa-users' ; ?>" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo strtoupper($type); ?></i></td>
+		  <i class="fa <?php echo $type == 'staff' ? 'fa-user-md' : ($type == 'admin' ? 'fa-user-shield' : 'fa-user') ; ?>" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo strtoupper($type == 'client' ? 'PET OWNER' : $type); ?></td>
           <td><span class="label label-<?php echo $stat; ?>"><?php echo strtoupper($status); ?></span></td>
           <?php if($utype == 'on') { ?>
 		  <td><?php if($status == "active") {?>

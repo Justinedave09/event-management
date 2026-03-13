@@ -3,7 +3,7 @@ $records = getHolidayRecords();
 ?>
 <div class="box">
   <div class="box-header with-border">
-    <h3 class="box-title">Holiday List</h3>
+    <h3 class="box-title">Clinic Closed Days</h3>
   </div>
   <!-- /.box-header -->
   <div class="box-body">
@@ -11,7 +11,7 @@ $records = getHolidayRecords();
       <tr>
         <th style="width: 10px">#</th>
         <th>Date</th>
-        <th>Reason</th>
+        <th>Reason for Closure</th>
         <th>Action</th>
       </tr>
       <?php
@@ -35,7 +35,7 @@ $records = getHolidayRecords();
 <!-- /.box -->
 <script language="javascript">
 function deleteHoliday(hid) {
-	if(confirm('Deleting holiday will allows user to book that date.\n\nAre you sure you want to proceed ?')) {
+	if(confirm('Removing this closed day will allow appointments to be booked on this date.\n\nAre you sure you want to proceed?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=hdelete&hId='+hid;
 	}
 }

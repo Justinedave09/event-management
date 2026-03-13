@@ -5,7 +5,7 @@
 <div class="col-md-4">
 <?php 
 $type = $_SESSION['calendar_fd_user']['type'];
-if($type == 'admin' || $type == 'teacher') {
+if($type == 'admin' || $type == 'staff') {
 	include('eventform.php');
 }
 else {

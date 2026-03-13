@@ -50,7 +50,7 @@ function addHoliday() {
 	$result = dbQuery($sql);
 	
 	if (dbNumRows($result) > 0) {
-		$errorMessage = 'Holiday already exist in record.';
+		$errorMessage = 'Clinic is already closed on this date.';
 		header('Location: ../views/?v=HOLY&err=' . urlencode($errorMessage));
 		exit();
 	}
@@ -58,7 +58,7 @@ function addHoliday() {
 		$sql = "INSERT INTO tbl_holidays (date, reason, bdate)
 				VALUES ('$date', '$reason', NOW())";	
 		dbQuery($sql);
-		$msg = 'Holiday successfully added on calendar.';
+		$msg = 'Clinic closed day successfully added to calendar.';
 		header('Location: ../views/?v=HOLY&msg=' . urlencode($msg));
 		exit();
 	}
@@ -73,33 +73,42 @@ function bookCalendar() {
 	$rdate		= $_POST['rdate'];
 	$rtime		= $_POST['rtime'];
 	$bkdate		= $rdate. ' '. $rtime;
-	$ucount		= $_POST['ucount'];
+	$pet_name	= $_POST['pet_name'];
+	$pet_type	= $_POST['pet_type'];
+	$pet_breed	= isset($_POST['pet_breed']) ? $_POST['pet_breed'] : '';
+	$appointment_type = isset($_POST['appointment_type']) ? $_POST['appointment_type'] : 'General Checkup';
 	
-	//TODO first check if that date has a holiday
+	//Check if that date has a holiday
 	$hsql	= "SELECT * FROM tbl_holidays WHERE date = '$rdate'";
 	$hresult = dbQuery($hsql);
 	if (dbNumRows($hresult) > 0) {
-		$errorMessage = 'You can not book any event on Holiday. Please try another day.';
+		$errorMessage = 'The clinic is closed on this date. Please select another day.';
 		header('Location: ../views/?v=DB&err=' . urlencode($errorMessage));
 		exit();
 	}
 	
-	/*
-	$sql = "INSERT INTO tbl_users (name, address, phone, email, bdate)
-			VALUES ('$name', '$address', '$phone', '$email', NOW())";	
-	dbQuery($sql);
-	$insert_id = dbInsertId();
-	*/
-	
-	$sql = "INSERT INTO tbl_reservations (uid, ucount, rdate, status, comments, bdate) 
-			VALUES ($userId, $ucount, '$bkdate', 'PENDING', '', NOW())";
+	$sql = "INSERT INTO tbl_appointments (uid, pet_name, pet_type, pet_breed, appointment_date, appointment_type, status, comments, bdate) 
+			VALUES ($userId, '$pet_name', '$pet_type', '$pet_breed', '$bkdate', '$appointment_type', 'PENDING', '', NOW())";
 	dbQuery($sql);
 	
-	//send email on registration confirmation
-	$bodymsg = "User $name booked the date slot on $bkdate. Requesting you to please take further action on user booking.<br/>Mbr/>Tousif Khan";
-	$data = array('to' => 'tousifkhan510@gmail.com', 'sub' => 'Booking on $rdate.', 'msg' => $bodymsg);
-	//send_email($data);
-	header('Location: ../index.php?msg=' . urlencode('User successfully registered.'));
+	//Send email confirmation to user
+	$emailMsg = get_email_msg(array(
+		'msg' => 'appointment_booked',
+		'name' => $name,
+		'pet_name' => $pet_name,
+		'pet_type' => $pet_type,
+		'appointment_date' => $bkdate,
+		'appointment_type' => $appointment_type
+	));
+	
+	$emailData = array(
+		'to' => $email, 
+		'sub' => 'Veterinary Appointment Confirmation - Pending', 
+		'msg' => $emailMsg
+	);
+	send_email($emailData);
+	
+	header('Location: ../index.php?msg=' . urlencode('Appointment successfully booked. Check your email for confirmation.'));
 	exit();
 }
 
@@ -108,24 +117,58 @@ function regConfirm() {
 	$action 	= $_GET['action'];
 	$stat		= ($action == 'approve') ? 'APPROVED' : 'DENIED';
 	
-	$sql		= "UPDATE tbl_reservations SET status = '$stat' WHERE uid = $userId";
+	$sql		= "UPDATE tbl_appointments SET status = '$stat' WHERE uid = $userId";
 	dbQuery($sql);
 	
-	//send email now.
-	$data = array();
+	//Get user and appointment details for email
+	$userSql = "SELECT u.name, u.email, a.pet_name, a.appointment_date, a.appointment_type 
+				FROM tbl_users u, tbl_appointments a 
+				WHERE u.id = a.uid AND u.id = $userId 
+				LIMIT 1";
+	$userResult = dbQuery($userSql);
 	
-	header('Location: ../views/?v=DB&msg=' . urlencode('Reservation status successfully changed.'));
+	if (dbNumRows($userResult) > 0) {
+		$userData = dbFetchAssoc($userResult);
+		
+		if ($stat == 'APPROVED') {
+			$emailMsg = get_email_msg(array(
+				'msg' => 'appointment_confirmed',
+				'name' => $userData['name'],
+				'pet_name' => $userData['pet_name'],
+				'appointment_date' => $userData['appointment_date'],
+				'appointment_type' => $userData['appointment_type']
+			));
+			$subject = 'Veterinary Appointment CONFIRMED';
+		} else {
+			$emailMsg = get_email_msg(array(
+				'msg' => 'appointment_denied',
+				'name' => $userData['name'],
+				'appointment_date' => $userData['appointment_date'],
+				'reason' => 'Time slot no longer available'
+			));
+			$subject = 'Veterinary Appointment Update';
+		}
+		
+		$emailData = array(
+			'to' => $userData['email'], 
+			'sub' => $subject, 
+			'msg' => $emailMsg
+		);
+		send_email($emailData);
+	}
+	
+	header('Location: ../views/?v=DB&msg=' . urlencode('Appointment status successfully changed and email sent to client.'));
 	exit();
 }
 
 function regDelete() {
 	$userId	= $_GET['userId'];
-	$sql1	= "DELETE FROM tbl_reservations WHERE uid = $userId";
+	$sql1	= "DELETE FROM tbl_appointments WHERE uid = $userId";
 	dbQuery($sql1);
 	$sql2	= "DELETE FROM tbl_users WHERE id = $userId";
 	dbQuery($sql2);
 	
-	header('Location: ../views/?v=LIST&msg=' . urlencode('User record successfully deleted.'));
+	header('Location: ../views/?v=LIST&msg=' . urlencode('Appointment record successfully deleted.'));
 	exit();
 }
 
@@ -133,36 +176,33 @@ function deleteHoliday() {
 	$holyId	= $_GET['hId'];
 	$dsql	= "DELETE FROM tbl_holidays WHERE id = $holyId";
 	dbQuery($dsql);
-	header('Location: ../views/?v=HOLY&msg=' . urlencode('Holiday record successfully deleted.'));
+	header('Location: ../views/?v=HOLY&msg=' . urlencode('Clinic closed day successfully removed.'));
 	exit();
 }
 
 function calendarView() {
 	$start 	= $_POST['start'];
-	//$sdate	= date("Y-m-d\TH:i\Z", time($start));
 	$end 	= $_POST['end'];
-	//$edate	= date("Y-m-d\TH:i\Z", time($end));
 	$bookings = array();
-	$sql	= "SELECT u.name AS u_name, u.id AS user_id, r.rdate, r.status 
-			   FROM tbl_users u, tbl_reservations r 
-			   WHERE u.id = r.uid  
-			   AND (r.rdate BETWEEN '$start' AND '$end')";
-	//AND r.status = 'APPROVED'
+	$sql	= "SELECT u.name AS u_name, u.id AS user_id, a.appointment_date, a.status, a.pet_name, a.appointment_type 
+			   FROM tbl_users u, tbl_appointments a 
+			   WHERE u.id = a.uid  
+			   AND (a.appointment_date BETWEEN '$start' AND '$end')";
 	$result = dbQuery($sql);
 	while($row = dbFetchAssoc($result)) {
 		extract($row);
 		$book = new Booking();
-		$book->title = $u_name;
-		$book->start = $rdate; 
+		$book->title = $u_name . ' - ' . $pet_name . ' (' . $appointment_type . ')';
+		$book->start = $appointment_date; 
 		$bgClr = '#f39c12';//pending
 		if($status == 'DENIED') {$bgClr = '#ff0000';}
 		else if($status == 'APPROVED') {$bgClr = '#00cc00';}
-		$book->backgroundColor = $bgClr; //#7FFF00 -> green, #ff0000 red, #f39c12 -> pending 
+		$book->backgroundColor = $bgClr;
 		$book->borderColor = $bgClr;
 		$book->url = WEB_ROOT . 'views/?v=USER&ID='.$user_id;
 		$bookings[] = $book; 
 	}
-	//execute SQLs to get the Holiday blocking days List within the limit of start, end date;
+	//Get clinic closed days
 	$hsql	= "SELECT * FROM tbl_holidays 
 			   WHERE (date BETWEEN '$start' AND '$end')";
 	$hresult = dbQuery($hsql);
@@ -176,7 +216,7 @@ function calendarView() {
 		$b->borderColor = '#F0F0F0';
 		$b->className = 'fc-disabled';
 		$bookings[] = $b;
-	}//while
+	}
 	echo json_encode($bookings);
 }
 

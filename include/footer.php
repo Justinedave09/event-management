@@ -1,2 +1,4 @@
-<div class="pull-right hidden-xs"> <b>Version</b> 2.3.0 </div>
-<strong>Copyright &copy; 2020 <a href="http://www.campcodes.com" target="_blank">CampCodes</a>.</strong> All rights reserved.
+<div class="pull-right hidden-xs"> 
+  <strong><?php echo getSystemSetting('clinic_name', 'Veterinary Appointment System'); ?></strong>
+</div>
+<strong>&copy; <?php echo date('Y'); ?> <?php echo getSystemSetting('clinic_name', 'Veterinary Clinic'); ?>.</strong> All rights reserved.

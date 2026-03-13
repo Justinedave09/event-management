@@ -11,7 +11,7 @@ session_start();
 $dbHost = 'localhost';
 $dbUser = 'root';
 $dbPass = '';
-$dbName = 'db_event_management';
+$dbName = 'db_vet_appointment';
 
 /*
 $dbHost = 'localhost';
@@ -20,8 +20,8 @@ $dbPass = 'ce=rgfq=C6LB';
 $dbName = 'tousifkh_calendar';
 */
 //Project data
-$site_title 	= 'Online Banking - www.TechZoo.org';
-$email_id 		= 'customerservice@hlbonline.pro';
+$site_title 	= 'Veterinary Appointment System';
+$email_id 		= 'appointments@vetclinic.com';
 
 $thisFile = str_replace('\\', '/', __FILE__);
 $docRoot = $_SERVER['DOCUMENT_ROOT'];

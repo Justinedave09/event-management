@@ -1,0 +1,292 @@
+2026-03-13 07:21:21 - Email to: chua.j.d.bscs@gmail.com, Subject: Test Email from Veterinary Clinic, Success: No
+2026-03-13 07:43:55 - Email to: chua.j.d.bscs@gmail.com, Subject: Test Email from Veterinary Clinic, Success: No
+2026-03-13 07:44:09 - Email to: chua.j.d.bscs@gmail.com, Subject: Test Email from Veterinary Clinic, Success: No
+2026-03-13 07:44:17 - Email to: chua.j.d.bscs@gmail.com, Subject: Test Email from Veterinary Clinic, Success: No
+
+2026-03-13 07:46:14 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:46:14
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:46:49 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:46:49
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:47:30 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:47:30
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:02 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:02
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:03 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:03
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:03 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:03
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:04 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:04
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:04 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:04
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:04 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:04
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:04 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:04
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:04 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:04
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:05 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:05
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:05 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:05
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:05 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:05
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:05 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:05
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:05 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:05
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:06 - EMAIL LOG
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:06
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------
+
+2026-03-13 07:48:14 - EMAIL LOG
+To: justinechua0921@gmail.com
+Subject: Test Email from Veterinary Clinic
+Message: 
+					Test Email
+					If you receive this email, your email configuration is working correctly!
+					
+						Configuration Status:
+						Method: PHP Mail
+						Time: 2026-03-13 07:48:14
+					
+					Best regards,
+					Veterinary Clinic Team
+				
+-------------------

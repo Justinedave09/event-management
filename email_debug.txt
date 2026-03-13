@@ -1,0 +1,32 @@
+
+2026-03-13 07:57:07 - EMAIL ATTEMPT
+To: justinechua0921@gmail.com
+Subject: Test Email from Veterinary Clinic
+PHP mail() returned: FALSE
+Current SMTP: localhost
+Current SMTP Port: 25
+Sendmail From: 
+Sendmail Path: 
+PHP Error: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+-------------------
+
+2026-03-13 07:58:12 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Test Email from Veterinary Clinic
+PHP mail() returned: FALSE
+Current SMTP: localhost
+Current SMTP Port: 25
+Sendmail From: 
+Sendmail Path: 
+PHP Error: mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set()
+-------------------
+
+2026-03-13 08:04:47 - EMAIL ATTEMPT
+To: justinechua0921@gmail.com
+Subject: Test Email from Veterinary Clinic
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------

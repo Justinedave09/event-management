@@ -5,7 +5,7 @@ require_once './library/functions.php';
 checkFDUser();
 
 $content = 'views/dashboard.php';
-$pageTitle = 'Event Management';
+$pageTitle = 'Veterinary Appointment System';
 $script = array();
 
 require_once 'include/template.php';

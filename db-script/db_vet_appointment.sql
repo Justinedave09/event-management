@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_event_management`
+-- Database: `db_vet_appointment`
 --
 
 -- --------------------------------------------------------
@@ -50,14 +50,17 @@ CREATE TABLE `tbl_holidays` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_reservations`
+-- Table structure for table `tbl_appointments`
 --
 
-CREATE TABLE `tbl_reservations` (
+CREATE TABLE `tbl_appointments` (
   `id` int(10) NOT NULL,
   `uid` int(10) NOT NULL,
-  `ucount` int(10) NOT NULL,
-  `rdate` varchar(100) NOT NULL,
+  `pet_name` varchar(100) NOT NULL,
+  `pet_type` varchar(50) NOT NULL,
+  `pet_breed` varchar(100) NOT NULL,
+  `appointment_date` varchar(100) NOT NULL,
+  `appointment_type` varchar(50) NOT NULL,
   `status` varchar(10) NOT NULL,
   `comments` varchar(250) NOT NULL,
   `bdate` varchar(100) NOT NULL
@@ -88,6 +91,34 @@ CREATE TABLE `tbl_users` (
 INSERT INTO `tbl_users` (`id`, `name`, `pwd`, `address`, `phone`, `email`, `type`, `status`, `bdate`) VALUES
 (15, 'admin', 'admin', 'some addresses', '11223344', 'myemail@gmail.com', 'admin', 'active', '2016-12-20 10:00:08');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_system_settings`
+--
+
+CREATE TABLE `tbl_system_settings` (
+  `id` int(10) NOT NULL,
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` text NOT NULL,
+  `setting_description` varchar(255) DEFAULT NULL,
+  `updated_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_system_settings`
+--
+
+INSERT INTO `tbl_system_settings` (`id`, `setting_key`, `setting_value`, `setting_description`, `updated_date`) VALUES
+(1, 'clinic_name', 'Veterinary Clinic', 'Name of the veterinary clinic', NOW()),
+(2, 'clinic_address', '123 Main Street\nCity, State 12345', 'Physical address of the clinic', NOW()),
+(3, 'clinic_phone', '(555) 123-4567', 'Main phone number', NOW()),
+(4, 'clinic_email', 'info@vetclinic.com', 'Main email address', NOW()),
+(5, 'clinic_hours', 'Monday - Friday: 8:00 AM - 6:00 PM\nSaturday: 9:00 AM - 4:00 PM\nSunday: Closed', 'Operating hours', NOW()),
+(6, 'appointment_duration', '30', 'Default appointment duration in minutes', NOW()),
+(7, 'booking_advance_days', '90', 'How many days in advance bookings are allowed', NOW()),
+(8, 'email_notifications', '1', 'Enable/disable email notifications', NOW());
+
 --
 -- Indexes for dumped tables
 --
@@ -105,9 +136,9 @@ ALTER TABLE `tbl_holidays`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_reservations`
+-- Indexes for table `tbl_appointments`
 --
-ALTER TABLE `tbl_reservations`
+ALTER TABLE `tbl_appointments`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -115,6 +146,13 @@ ALTER TABLE `tbl_reservations`
 --
 ALTER TABLE `tbl_users`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_system_settings`
+--
+ALTER TABLE `tbl_system_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `setting_key` (`setting_key`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -133,9 +171,9 @@ ALTER TABLE `tbl_holidays`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tbl_reservations`
+-- AUTO_INCREMENT for table `tbl_appointments`
 --
-ALTER TABLE `tbl_reservations`
+ALTER TABLE `tbl_appointments`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
@@ -143,6 +181,12 @@ ALTER TABLE `tbl_reservations`
 --
 ALTER TABLE `tbl_users`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `tbl_system_settings`
+--
+ALTER TABLE `tbl_system_settings`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

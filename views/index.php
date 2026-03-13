@@ -9,17 +9,22 @@ $view = (isset($_GET['v']) && $_GET['v'] != '') ? $_GET['v'] : '';
 switch ($view) {
 	case 'LIST' :
 		$content 	= 'eventlist.php';		
-		$pageTitle 	= 'View Event Details';
+		$pageTitle 	= 'View Appointment Details';
 		break;
 
 	case 'USERS' :
 		$content 	= 'userlist.php';		
-		$pageTitle 	= 'View User Details';
+		$pageTitle 	= 'View Pet Owners';
 		break;
 		
 	case 'CREATE' :
 		$content 	= 'userform.php';		
-		$pageTitle 	= 'Create New User';
+		$pageTitle 	= 'Register Pet Owner';
+		break;
+		
+	case 'STAFF' :
+		$content 	= 'staffform.php';		
+		$pageTitle 	= 'Staff Management';
 		break;
 		
 	case 'USER' :
@@ -29,7 +34,12 @@ switch ($view) {
 	
 	case 'HOLY' :
 		$content 	= 'holidays.php';		
-		$pageTitle 	= 'Holidays';
+		$pageTitle 	= 'Clinic Closed Days';
+		break;
+		
+	case 'SETTINGS' :
+		$content 	= 'settings.php';		
+		$pageTitle 	= 'System Settings';
 		break;	
 	
 	default :

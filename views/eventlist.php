@@ -10,18 +10,20 @@ if($type == 'admin') {
 <div class="col-md-12">
   <div class="box">
     <div class="box-header with-border">
-      <h3 class="box-title">Event Booking Details</h3>
+      <h3 class="box-title">Veterinary Appointment Details</h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
       <table class="table table-bordered">
         <tr>
           <th style="width: 10px">#</th>
-          <th>Name</th>
+          <th>Owner Name</th>
           <th>Email</th>
           <th>Phone</th>
-          <th>Booking Date</th>
-          <th style="width: 140px">Number of People</th>
+          <th>Pet Name</th>
+          <th>Pet Type</th>
+          <th>Appointment Date</th>
+          <th>Appointment Type</th>
           <th style="width: 100px">Status</th>
           <?php if($utype == 'on') { ?>
 		  <th >Action</th>
@@ -41,13 +43,15 @@ if($type == 'admin') {
           <td><a href="<?php echo WEB_ROOT; ?>views/?v=USER&ID=<?php echo $user_id; ?>"><?php echo strtoupper($user_name); ?></a></td>
           <td><?php echo $user_email; ?></td>
           <td><?php echo $user_phone; ?></td>
-          <td><?php echo $res_date; ?></td>
-          <td><?php echo $count; ?></td>
+          <td><?php echo $pet_name; ?></td>
+          <td><?php echo $pet_type; ?></td>
+          <td><?php echo $appointment_date; ?></td>
+          <td><?php echo $appointment_type; ?></td>
           <td><span class="label label-<?php echo $stat; ?>"><?php echo $status; ?></span></td>
           <?php if($utype == 'on') { ?>
 		  <td><?php if($status == "PENDING") {?>
             <a href="javascript:approve('<?php echo $user_id ?>');">Approve</a>&nbsp;/
-			&nbsp;<a href="javascript:decline('<?php echo $user_id ?>');">Denied</a>&nbsp;/
+			&nbsp;<a href="javascript:decline('<?php echo $user_id ?>');">Deny</a>&nbsp;/
 			&nbsp;<a href="javascript:deleteUser('<?php echo $user_id ?>');">Delete</a>
             <?php } else { ?>
 			<a href="javascript:deleteUser('<?php echo $user_id ?>');">Delete</a>
@@ -81,12 +85,12 @@ function approve(userId) {
 	}
 }
 function decline(userId) {
-	if(confirm('Are you sure you wants to Decline the Booking ?')) {
+	if(confirm('Are you sure you want to decline this appointment?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=regConfirm&action=denide&userId='+userId;
 	}
 }
 function deleteUser(userId) {
-	if(confirm('Deleting user will also delete it\'s booking from calendar.\n\nAre you sure you want to priceed ?')) {
+	if(confirm('Deleting this record will also remove the appointment from calendar.\n\nAre you sure you want to proceed?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=delete&userId='+userId;
 	}
 }

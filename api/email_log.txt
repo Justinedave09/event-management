@@ -1,0 +1,54 @@
+
+2026-03-13 07:50:13 - EMAIL LOG
+To: justinechua0921@gmail.com
+Subject: Veterinary Appointment Confirmation - Pending
+Message: 
+			
+			
+				Appointment Confirmation
+				Dear 17,
+				Your veterinary appointment has been successfully booked.
+				
+					Appointment Details:
+					Pet Name: pam
+					Pet Type: Dog
+					Appointment Date: 2026-05-20 12:00
+					Appointment Type: General Checkup
+					Status: Pending Confirmation
+				
+				You will receive another email once your appointment is confirmed by our staff.
+				Best regards,
+				Veterinary Clinic Team
+			
+			
+-------------------
+
+2026-03-13 07:50:30 - EMAIL LOG
+To: justinechua0921@gmail.com
+Subject: Veterinary Appointment CONFIRMED
+Message: 
+			
+			
+				Appointment Confirmed!
+				Dear justine,
+				Great news! Your veterinary appointment has been CONFIRMED.
+				
+					Confirmed Appointment Details:
+					Pet Name: pam
+					Appointment Date: 2026-05-20 12:00
+					Appointment Type: General Checkup
+				
+				
+					Important Reminders:
+					
+						Please arrive 10 minutes early
+						Bring your pet's vaccination records
+						If you need to reschedule, please contact us as soon as possible
+					
+				
+				We look forward to seeing you and your pet!
+				Best regards,
+				Veterinary Clinic Team
+			
+			
+-------------------

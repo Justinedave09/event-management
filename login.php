@@ -45,7 +45,7 @@ if (isset($_POST['name']) && isset($_POST['pwd'])) {
   <body class="hold-transition login-page">
     <div class="login-box">
       <div class="login-logo">
-        <a href="#">Online Event Management</a>
+        <a href="#">Veterinary Clinic Appointment System</a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>

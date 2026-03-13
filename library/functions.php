@@ -73,10 +73,10 @@ function getBookingRecords(){
 	$page = (isset($_GET['page']) && $_GET['page'] != '') ? $_GET['page'] : 1;
 	$start 	= ($page-1)*$per_page;
 	$sql 	= "SELECT u.id AS uid, u.name, u.phone, u.email,
-			   r.ucount, r.rdate, r.status, r.comments   
-			   FROM tbl_users u, tbl_reservations r 
-			   WHERE u.id = r.uid  
-			   ORDER BY r.id DESC LIMIT $start, $per_page";
+			   a.pet_name, a.pet_type, a.appointment_date, a.appointment_type, a.status, a.comments   
+			   FROM tbl_users u, tbl_appointments a 
+			   WHERE u.id = a.uid  
+			   ORDER BY a.id DESC LIMIT $start, $per_page";
 	//echo $sql;
 	$result = dbQuery($sql);
 	$records = array();
@@ -86,8 +86,10 @@ function getBookingRecords(){
 							"user_name" => $name,
 							"user_phone" => $phone,
 							"user_email" => $email,
-							"count" => $ucount,
-							"res_date" => $rdate,
+							"pet_name" => $pet_name,
+							"pet_type" => $pet_type,
+							"appointment_date" => $appointment_date,
+							"appointment_type" => $appointment_type,
 							"status" => $status,
 							"comments" => $comments);	
 	}//while
@@ -101,12 +103,13 @@ function getUserRecords(){
 	$start 	= ($page-1)*$per_page;
 	
 	$type = $_SESSION['calendar_fd_user']['type'];
-	if($type == 'student') {
+	if($type == 'client') {
 		$id = $_SESSION['calendar_fd_user']['id'];
-		$sql = "SELECT  * FROM tbl_users u WHERE type != 'admin' AND id = $id ORDER BY u.id DESC";
+		$sql = "SELECT  * FROM tbl_users u WHERE type = 'client' AND id = $id ORDER BY u.id DESC";
 	}
 	else {
-		$sql = "SELECT  * FROM tbl_users u WHERE type != 'admin' ORDER BY u.id DESC LIMIT $start, $per_page";
+		// Show only pet owners (clients) in the user list
+		$sql = "SELECT  * FROM tbl_users u WHERE type = 'client' ORDER BY u.id DESC LIMIT $start, $per_page";
 	}
 	
 	//echo $sql;
@@ -124,6 +127,103 @@ function getUserRecords(){
 		);	
 	}
 	return $records;
+}
+
+function getStaffRecords(){
+	$per_page = 20;
+	$page = (isset($_GET['page']) && $_GET['page'] != '') ? $_GET['page'] : 1;
+	$start 	= ($page-1)*$per_page;
+	
+	// Show only staff and admin users
+	$sql = "SELECT  * FROM tbl_users u WHERE type IN ('staff', 'admin') ORDER BY u.id DESC LIMIT $start, $per_page";
+	
+	$result = dbQuery($sql);
+	$records = array();
+	while($row = dbFetchAssoc($result)) {
+		extract($row);
+		$records[] = array("user_id" => $id,
+			"user_name" => $name,
+			"user_phone" => $phone,
+			"user_email" => $email,
+			"type" => $type,
+			"status" => $status,
+			"bdate" => $bdate
+		);	
+	}
+	return $records;
+}
+
+function getSystemSettings() {
+	$sql = "SELECT setting_key, setting_value FROM tbl_system_settings";
+	$result = dbQuery($sql);
+	$settings = array();
+	
+	// Default settings in case table doesn't exist or is empty
+	$defaults = array(
+		'clinic_name' => 'Veterinary Clinic',
+		'clinic_address' => '123 Main Street\nCity, State 12345',
+		'clinic_phone' => '(555) 123-4567',
+		'clinic_email' => 'info@vetclinic.com',
+		'clinic_hours' => 'Monday - Friday: 8:00 AM - 6:00 PM\nSaturday: 9:00 AM - 4:00 PM\nSunday: Closed',
+		'appointment_duration' => '30',
+		'booking_advance_days' => '90',
+		'email_notifications' => '1'
+	);
+	
+	// If table exists and has data, use it
+	if ($result && dbNumRows($result) > 0) {
+		while($row = dbFetchAssoc($result)) {
+			$settings[$row['setting_key']] = $row['setting_value'];
+		}
+		// Merge with defaults for any missing settings
+		$settings = array_merge($defaults, $settings);
+	} else {
+		// Use defaults if table doesn't exist
+		$settings = $defaults;
+	}
+	
+	return $settings;
+}
+
+function updateSystemSettings($settingsData) {
+	$success = true;
+	
+	foreach ($settingsData as $key => $value) {
+		// Escape the value for SQL
+		$value = addslashes($value);
+		$key = addslashes($key);
+		
+		// Check if setting exists
+		$checkSql = "SELECT id FROM tbl_system_settings WHERE setting_key = '$key'";
+		$checkResult = dbQuery($checkSql);
+		
+		if ($checkResult && dbNumRows($checkResult) > 0) {
+			// Update existing setting
+			$sql = "UPDATE tbl_system_settings SET setting_value = '$value', updated_date = NOW() WHERE setting_key = '$key'";
+		} else {
+			// Insert new setting
+			$sql = "INSERT INTO tbl_system_settings (setting_key, setting_value, updated_date) VALUES ('$key', '$value', NOW())";
+		}
+		
+		if (!dbQuery($sql)) {
+			$success = false;
+		}
+	}
+	
+	return $success;
+}
+
+function getSystemSetting($key, $default = '') {
+	$key = addslashes($key);
+	$sql = "SELECT setting_value FROM tbl_system_settings WHERE setting_key = '$key'";
+	$result = dbQuery($sql);
+	
+	if ($result && dbNumRows($result) > 0) {
+		$row = dbFetchAssoc($result);
+		return $row['setting_value'];
+	}
+	
+	return $default;
 }
 
 function getHolidayRecords() {
