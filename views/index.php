@@ -11,10 +11,20 @@ switch ($view) {
 		$content 	= 'eventlist.php';		
 		$pageTitle 	= 'View Appointment Details';
 		break;
+		
+	case 'EDIT' :
+		$content 	= 'appedit.php';		
+		$pageTitle 	= 'Edit Appointment';
+		break;
 
 	case 'USERS' :
 		$content 	= 'userlist.php';		
 		$pageTitle 	= 'View Pet Owners';
+		break;
+		
+	case 'USEREDIT' :
+		$content 	= 'useredit.php';		
+		$pageTitle 	= 'Edit User';
 		break;
 		
 	case 'CREATE' :
@@ -25,6 +35,11 @@ switch ($view) {
 	case 'STAFF' :
 		$content 	= 'staffform.php';		
 		$pageTitle 	= 'Staff Management';
+		break;
+		
+	case 'STAFFEDIT' :
+		$content 	= 'staffedit.php';		
+		$pageTitle 	= 'Edit Staff Member';
 		break;
 		
 	case 'USER' :

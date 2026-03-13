@@ -24,6 +24,14 @@ switch($cmd) {
 		updateSettings();
 	break;
 	
+	case 'updateUser':
+		updateUser();
+	break;
+	
+	case 'updateStaff':
+		updateStaff();
+	break;
+	
 	default :
 	break;
 }
@@ -167,6 +175,152 @@ function updateSettings() {
 	} else {
 		header('Location: ../views/?v=SETTINGS&err=' . urlencode('Failed to update system settings. Please try again.'));
 	}
+	exit();
+}
+
+function updateUser() {
+	$userId = (int)$_POST['userId'];
+	$name = $_POST['name'];
+	$address = $_POST['address'];
+	$phone = $_POST['phone'];
+	$email = $_POST['email'];
+	$status = $_POST['status'];
+	$type = $_POST['type'];
+	$pwd = isset($_POST['pwd']) && $_POST['pwd'] != '' ? $_POST['pwd'] : null;
+	
+	// Check if current user can edit this user
+	$current_user_type = $_SESSION['calendar_fd_user']['type'];
+	if ($current_user_type !== 'admin' && $current_user_type !== 'staff') {
+		header('Location: ../views/?v=USERS&err=' . urlencode('Access denied'));
+		exit();
+	}
+	
+	// Check if name already exists for other users
+	$nameSql = "SELECT * FROM tbl_users WHERE name = '$name' AND id != $userId";
+	$nameResult = dbQuery($nameSql);
+	if (dbNumRows($nameResult) > 0) {
+		header('Location: ../views/?v=USEREDIT&ID=' . $userId . '&err=' . urlencode('User with same name already exists.'));
+		exit();
+	}
+	
+	// Check if email already exists for other users
+	$emailSql = "SELECT * FROM tbl_users WHERE email = '$email' AND id != $userId";
+	$emailResult = dbQuery($emailSql);
+	if (dbNumRows($emailResult) > 0) {
+		header('Location: ../views/?v=USEREDIT&ID=' . $userId . '&err=' . urlencode('User with same email already exists.'));
+		exit();
+	}
+	
+	// Build update query
+	$updateFields = array(
+		"name = '$name'",
+		"address = '$address'",
+		"phone = '$phone'",
+		"email = '$email'",
+		"status = '$status'",
+		"type = '$type'"
+	);
+	
+	// Add password to update if provided
+	if ($pwd !== null) {
+		$updateFields[] = "pwd = '$pwd'";
+	}
+	
+	$sql = "UPDATE tbl_users SET " . implode(', ', $updateFields) . " WHERE id = $userId";
+	dbQuery($sql);
+	
+	// Send email notification if password was changed
+	if ($pwd !== null) {
+		$emailMsg = get_email_msg(array(
+			'msg' => 'change_pwd',
+			'pwd' => $pwd
+		));
+		
+		$emailData = array(
+			'to' => $email, 
+			'sub' => 'Password Updated - Veterinary Clinic', 
+			'msg' => $emailMsg
+		);
+		send_email($emailData);
+	}
+	
+	header('Location: ../views/?v=USERS&msg=' . urlencode('User successfully updated.'));
+	exit();
+}
+
+function updateStaff() {
+	// Check if current user is admin
+	if ($_SESSION['calendar_fd_user']['type'] !== 'admin') {
+		header('Location: ../views/?v=STAFF&err=' . urlencode('Access denied. Only administrators can edit staff accounts.'));
+		exit();
+	}
+	
+	$userId = (int)$_POST['userId'];
+	$name = $_POST['name'];
+	$address = $_POST['address'];
+	$phone = $_POST['phone'];
+	$email = $_POST['email'];
+	$status = $_POST['status'];
+	$type = $_POST['type'];
+	$pwd = isset($_POST['pwd']) && $_POST['pwd'] != '' ? $_POST['pwd'] : null;
+	
+	// Validate staff type
+	if (!in_array($type, ['staff', 'admin'])) {
+		header('Location: ../views/?v=STAFFEDIT&ID=' . $userId . '&err=' . urlencode('Invalid staff type selected.'));
+		exit();
+	}
+	
+	// Check if name already exists for other users
+	$nameSql = "SELECT * FROM tbl_users WHERE name = '$name' AND id != $userId";
+	$nameResult = dbQuery($nameSql);
+	if (dbNumRows($nameResult) > 0) {
+		header('Location: ../views/?v=STAFFEDIT&ID=' . $userId . '&err=' . urlencode('User with same name already exists.'));
+		exit();
+	}
+	
+	// Check if email already exists for other users
+	$emailSql = "SELECT * FROM tbl_users WHERE email = '$email' AND id != $userId";
+	$emailResult = dbQuery($emailSql);
+	if (dbNumRows($emailResult) > 0) {
+		header('Location: ../views/?v=STAFFEDIT&ID=' . $userId . '&err=' . urlencode('User with same email already exists.'));
+		exit();
+	}
+	
+	// Build update query
+	$updateFields = array(
+		"name = '$name'",
+		"address = '$address'",
+		"phone = '$phone'",
+		"email = '$email'",
+		"status = '$status'",
+		"type = '$type'"
+	);
+	
+	// Add password to update if provided
+	if ($pwd !== null) {
+		$updateFields[] = "pwd = '$pwd'";
+	}
+	
+	$sql = "UPDATE tbl_users SET " . implode(', ', $updateFields) . " WHERE id = $userId";
+	dbQuery($sql);
+	
+	// Send email notification if password was changed
+	if ($pwd !== null) {
+		$roleTitle = ($type === 'admin') ? 'Administrator' : 'Veterinary Staff';
+		$emailMsg = get_email_msg(array(
+			'msg' => 'register',
+			'body' => "Dear $name,<br/><br/>Your $roleTitle account has been updated.<br/><br/>New Password: $pwd<br/><br/>Please keep this information secure.<br/><br/>Best regards,<br/>Veterinary Clinic Administration"
+		));
+		
+		$emailData = array(
+			'to' => $email, 
+			'sub' => 'Account Updated - Veterinary Clinic', 
+			'msg' => $emailMsg
+		);
+		send_email($emailData);
+	}
+	
+	header('Location: ../views/?v=STAFF&msg=' . urlencode('Staff member successfully updated.'));
 	exit();
 }
 ?>

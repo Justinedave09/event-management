@@ -3,20 +3,7 @@
 require_once 'config.php';
 require_once 'database.php';
 require_once 'email_config.php';
-
-// Function to get system setting (local version to avoid circular dependency)
-function getSystemSettingLocal($key, $default = '') {
-	$key = addslashes($key);
-	$sql = "SELECT setting_value FROM tbl_system_settings WHERE setting_key = '$key'";
-	$result = dbQuery($sql);
-	
-	if ($result && dbNumRows($result) > 0) {
-		$row = dbFetchAssoc($result);
-		return $row['setting_value'];
-	}
-	
-	return $default;
-}
+require_once 'functions.php'; // Include functions.php to use getSystemSetting
 
 function send_email($data) {
 	$to 	= $data['to'];
@@ -24,8 +11,8 @@ function send_email($data) {
 	$msg 	= $data['msg'];
 	
 	// Get clinic name from settings
-	$clinic_name = getSystemSettingLocal('clinic_name', 'Veterinary Clinic');
-	$clinic_email = getSystemSettingLocal('clinic_email', EMAIL_FROM_ADDRESS);
+	$clinic_name = getSystemSetting('clinic_name', 'Veterinary Clinic');
+	$clinic_email = getSystemSetting('clinic_email', EMAIL_FROM_ADDRESS);
 	
 	// Enhanced headers for better email delivery
 	$headers = "From: " . $clinic_name . " <" . $clinic_email . ">\r\n";
@@ -90,7 +77,7 @@ function test_email($email_address) {
 
 function get_email_msg($data) {
 	$msg_text = "";
-	$clinic_name = getSystemSettingLocal('clinic_name', 'Veterinary Clinic');
+	$clinic_name = getSystemSetting('clinic_name', 'Veterinary Clinic');
 	
 	switch($data['msg']) {
 		
@@ -162,6 +149,43 @@ function get_email_msg($data) {
 			</body>
 			</html>", 
 				$data['name'], $data['appointment_date'], $data['reason'], $clinic_name);
+		break;
+		
+		case 'appointment_reminder':
+			$msg_text = sprintf("
+			<html>
+			<body style='font-family: Arial, sans-serif;'>
+				<h2 style='color: #ff9800;'>🔔 Appointment Reminder</h2>
+				<p>Dear %s,</p>
+				<p>This is a friendly reminder about your upcoming veterinary appointment at %s.</p>
+				<div style='background-color: #fff3e0; padding: 15px; border-left: 4px solid #ff9800; margin: 20px 0;'>
+					<strong>Appointment Details:</strong><br/>
+					Pet Name: %s<br/>
+					Pet Type: %s<br/>
+					Appointment Date: %s<br/>
+					Appointment Type: %s<br/>
+					Status: <span style='color: #4caf50;'>Confirmed</span>
+				</div>
+				<div style='background-color: #e3f2fd; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+					<strong>📋 Please Remember:</strong>
+					<ul style='margin: 10px 0; padding-left: 20px;'>
+						<li>Arrive 10-15 minutes early for check-in</li>
+						<li>Bring your pet's vaccination records and medical history</li>
+						<li>Bring a list of any medications your pet is currently taking</li>
+						<li>If your pet is anxious, consider bringing their favorite toy or blanket</li>
+						<li>For fasting procedures, follow the pre-appointment instructions</li>
+					</ul>
+				</div>
+				<div style='background-color: #f1f8e9; padding: 10px; border-radius: 5px; margin: 20px 0;'>
+					<strong>📞 Need to reschedule?</strong><br/>
+					Please contact us as soon as possible if you need to change your appointment time.
+				</div>
+				<p>We look forward to seeing you and %s soon!</p>
+				<p>Best regards,<br/>
+				<strong>%s Team</strong></p>
+			</body>
+			</html>", 
+				$data['name'], $clinic_name, $data['pet_name'], $data['pet_type'], $data['appointment_date'], $data['appointment_type'], $data['pet_name'], $clinic_name);
 		break;
 		
 		case 'register':

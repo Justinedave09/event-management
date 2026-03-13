@@ -21,7 +21,8 @@ if($type == 'admin' || $type == 'staff') {
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-      <table class="table table-bordered">
+      <div class="table-responsive">
+        <table class="table table-bordered user-list-table">
         <tr>
           <th style="width: 10px">#</th>
           <th>Name</th>
@@ -30,7 +31,7 @@ if($type == 'admin' || $type == 'staff') {
           <th>User Role</th>
           <th style="width: 100px">Status</th>
           <?php if($utype == 'on') { ?>
-		  <th>Action</th>
+		  <th style="width: 200px">Action</th>
 		  <?php } ?>
         </tr>
         <?php
@@ -53,18 +54,34 @@ if($type == 'admin' || $type == 'staff') {
 		  <i class="fa <?php echo $type == 'staff' ? 'fa-user-md' : ($type == 'admin' ? 'fa-user-shield' : 'fa-user') ; ?>" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo strtoupper($type == 'client' ? 'PET OWNER' : $type); ?></td>
           <td><span class="label label-<?php echo $stat; ?>"><?php echo strtoupper($status); ?></span></td>
           <?php if($utype == 'on') { ?>
-		  <td><?php if($status == "active") {?>
-            <a href="javascript:status('<?php echo $user_id ?>', 'inactive');">Inactive</a>&nbsp;/
-			&nbsp;<a href="javascript:status('<?php echo $user_id ?>', 'lock');">Account Lock</a>&nbsp;/
-			&nbsp;<a href="javascript:status('<?php echo $user_id ?>', 'delete');">Delete</a>
-            <?php } else { ?>
-			<a href="javascript:status('<?php echo $user_id ?>', 'active');">Active</a>
-			<?php }//else ?>
+		  <td>
+		    <div class="user-actions">
+		      <a href="javascript:editUser('<?php echo $user_id ?>');" class="btn btn-info btn-xs btn-edit" title="Edit user details">
+                <i class="fa fa-edit"></i> Edit
+              </a>
+              
+		      <?php if($status == "active") {?>
+              <a href="javascript:status('<?php echo $user_id ?>', 'inactive');" class="btn btn-warning btn-xs" title="Deactivate user">
+                <i class="fa fa-pause"></i> Inactive
+              </a>
+			  <a href="javascript:status('<?php echo $user_id ?>', 'lock');" class="btn btn-danger btn-xs" title="Lock user account">
+                <i class="fa fa-lock"></i> Lock
+              </a>
+			  <a href="javascript:status('<?php echo $user_id ?>', 'delete');" class="btn btn-default btn-xs" title="Delete user">
+                <i class="fa fa-trash"></i> Delete
+              </a>
+              <?php } else { ?>
+			  <a href="javascript:status('<?php echo $user_id ?>', 'active');" class="btn btn-success btn-xs" title="Activate user">
+                <i class="fa fa-play"></i> Active
+              </a>
+			  <?php }//else ?>
+            </div>
           </td>
 		  <?php }?>
         </tr>
         <?php } ?>
-      </table>
+        </table>
+      </div>
     </div>
     <!-- /.box-body -->
     <div class="box-footer clearfix">
@@ -73,7 +90,7 @@ if($type == 'admin' || $type == 'staff') {
 	$type = $_SESSION['calendar_fd_user']['type'];
 	if($type == 'admin') {
 	?>
-	<button type="button" class="btn btn-info" onclick="javascript:createUserForm();"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Create a new User</button>
+	<!-- <button type="button" class="btn btn-info" onclick="javascript:createUserForm();"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Create a new User</button> -->
 	<?php 
 	}
 	?>
@@ -95,11 +112,23 @@ if($type == 'admin' || $type == 'staff') {
 function createUserForm() {
 	window.location.href = '<?php echo WEB_ROOT; ?>views/?v=CREATE';
 }
+
+function editUser(userId) {
+	// Redirect to edit form
+	window.location.href = '<?php echo WEB_ROOT; ?>views/?v=USEREDIT&ID='+userId;
+}
+
 function status(userId, status) {
-	if(confirm('Are you sure you wants to ' + status+ ' it ?')) {
+	var actionText = '';
+	switch(status) {
+		case 'active': actionText = 'activate'; break;
+		case 'inactive': actionText = 'deactivate'; break;
+		case 'lock': actionText = 'lock'; break;
+		case 'delete': actionText = 'delete'; break;
+	}
+	
+	if(confirm('Are you sure you want to ' + actionText + ' this user?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>views/process.php?cmd=change&action='+ status +'&userId='+userId;
 	}
 }
-
-
 </script>

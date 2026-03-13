@@ -27,6 +27,8 @@
 <script src="<?php echo WEB_ROOT; ?>dist/js/app.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo WEB_ROOT; ?>dist/js/demo.js"></script>
+<!-- Modern Theme JavaScript -->
+<script src="<?php echo WEB_ROOT; ?>dist/js/modern-theme.js"></script>
 <!-- fullCalendar 2.2.5 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 <script src="<?php echo WEB_ROOT; ?>plugins/fullcalendar/fullcalendar.min.js"></script>
@@ -36,6 +38,8 @@
 <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="<?php echo WEB_ROOT; ?>dist/css/skins/_all-skins.min.css">
+<!-- Modern Black & White Theme -->
+<link rel="stylesheet" href="<?php echo WEB_ROOT; ?>dist/css/modern-theme.css">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>

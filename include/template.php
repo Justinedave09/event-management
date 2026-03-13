@@ -10,7 +10,7 @@ $self = WEB_ROOT . 'admin/index.php';
 <head>
 <?php include('head.php'); ?>
 </head>
-<body class="skin-blue sidebar-mini">
+<body class="skin-black sidebar-mini modern-theme">
 <div class="wrapper">
   <header class="main-header">
     <!-- Logo -->

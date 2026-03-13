@@ -1,6 +1,5 @@
 <?php
-require_once('mail.php');
-
+// Note: mail.php functions are included separately to avoid circular dependency
 
 function random_string($length = 8) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

@@ -1,5 +1,6 @@
 <?php
 require_once 'library/config.php';
+require_once 'library/functions.php';
 require_once 'library/mail.php';
 ?>
 <!DOCTYPE html>

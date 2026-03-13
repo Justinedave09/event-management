@@ -119,6 +119,20 @@ INSERT INTO `tbl_system_settings` (`id`, `setting_key`, `setting_value`, `settin
 (7, 'booking_advance_days', '90', 'How many days in advance bookings are allowed', NOW()),
 (8, 'email_notifications', '1', 'Enable/disable email notifications', NOW());
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_appointment_reminders`
+--
+
+CREATE TABLE `tbl_appointment_reminders` (
+  `id` int(10) NOT NULL,
+  `appointment_id` int(10) NOT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sent_by` int(10) NOT NULL,
+  `email_status` varchar(20) DEFAULT 'sent'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -155,6 +169,14 @@ ALTER TABLE `tbl_system_settings`
   ADD UNIQUE KEY `setting_key` (`setting_key`);
 
 --
+-- Indexes for table `tbl_appointment_reminders`
+--
+ALTER TABLE `tbl_appointment_reminders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `appointment_id` (`appointment_id`),
+  ADD KEY `sent_by` (`sent_by`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -187,6 +209,12 @@ ALTER TABLE `tbl_users`
 --
 ALTER TABLE `tbl_system_settings`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `tbl_appointment_reminders`
+--
+ALTER TABLE `tbl_appointment_reminders`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

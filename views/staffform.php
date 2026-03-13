@@ -50,11 +50,21 @@ $staff_records = getStaffRecords();
             <td><?php echo $role_display; ?></td>
             <td><span class="label label-<?php echo $stat; ?>"><?php echo strtoupper($status); ?></span></td>
             <td>
-              <?php if($status == "active") { ?>
-                <a href="javascript:changeStatus('<?php echo $user_id ?>', 'inactive');">Deactivate</a>
-              <?php } else { ?>
-                <a href="javascript:changeStatus('<?php echo $user_id ?>', 'active');">Activate</a>
-              <?php } ?>
+              <div class="staff-actions">
+                <a href="javascript:editStaff('<?php echo $user_id ?>');" class="btn btn-info btn-xs btn-edit" title="Edit staff details">
+                  <i class="fa fa-edit"></i> Edit
+                </a>
+                
+                <?php if($status == "active") { ?>
+                  <a href="javascript:changeStatus('<?php echo $user_id ?>', 'inactive');" class="btn btn-warning btn-xs" title="Deactivate staff">
+                    <i class="fa fa-pause"></i> Deactivate
+                  </a>
+                <?php } else { ?>
+                  <a href="javascript:changeStatus('<?php echo $user_id ?>', 'active');" class="btn btn-success btn-xs" title="Activate staff">
+                    <i class="fa fa-play"></i> Activate
+                  </a>
+                <?php } ?>
+              </div>
             </td>
           </tr>
           <?php } ?>
@@ -161,6 +171,11 @@ var sprytf_staff_type 	= new Spry.Widget.ValidationSelect("sprytf_staff_type");
 </script>
 
 <script language="javascript">
+function editStaff(userId) {
+	// Redirect to edit form
+	window.location.href = '<?php echo WEB_ROOT; ?>views/?v=STAFFEDIT&ID='+userId;
+}
+
 function changeStatus(userId, action) {
 	var actionText = (action == 'active') ? 'activate' : 'deactivate';
 	if(confirm('Are you sure you want to ' + actionText + ' this staff member?')) {

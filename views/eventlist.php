@@ -14,7 +14,8 @@ if($type == 'admin') {
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-      <table class="table table-bordered">
+      <div class="table-responsive">
+        <table class="table table-bordered appointment-list-table">
         <tr>
           <th style="width: 10px">#</th>
           <th>Owner Name</th>
@@ -26,7 +27,7 @@ if($type == 'admin') {
           <th>Appointment Type</th>
           <th style="width: 100px">Status</th>
           <?php if($utype == 'on') { ?>
-		  <th >Action</th>
+		  <th style="width: 200px">Action</th>
 		  <?php } ?>
         </tr>
         <?php
@@ -49,18 +50,37 @@ if($type == 'admin') {
           <td><?php echo $appointment_type; ?></td>
           <td><span class="label label-<?php echo $stat; ?>"><?php echo $status; ?></span></td>
           <?php if($utype == 'on') { ?>
-		  <td><?php if($status == "PENDING") {?>
-            <a href="javascript:approve('<?php echo $user_id ?>');">Approve</a>&nbsp;/
-			&nbsp;<a href="javascript:decline('<?php echo $user_id ?>');">Deny</a>&nbsp;/
-			&nbsp;<a href="javascript:deleteUser('<?php echo $user_id ?>');">Delete</a>
-            <?php } else { ?>
-			<a href="javascript:deleteUser('<?php echo $user_id ?>');">Delete</a>
-			<?php }//else ?>
+		  <td>
+		    <div class="appointment-actions">
+		      <?php if($status == "PENDING") {?>
+              <a href="javascript:approve('<?php echo $user_id ?>');" class="btn btn-success btn-xs" title="Approve this appointment">
+                <i class="fa fa-check"></i> Approve
+              </a>
+			  <a href="javascript:decline('<?php echo $user_id ?>');" class="btn btn-danger btn-xs" title="Decline this appointment">
+                <i class="fa fa-times"></i> Deny
+              </a>
+              <?php } ?>
+              
+              <?php if($status == "APPROVED") { ?>
+              <a href="javascript:sendReminder('<?php echo $user_id ?>');" class="btn btn-warning btn-xs btn-reminder" title="Send appointment reminder email to client">
+                <i class="fa fa-bell"></i> Remind
+              </a>
+              <?php } ?>
+              
+              <a href="javascript:editAppointment('<?php echo $user_id ?>');" class="btn btn-info btn-xs btn-edit" title="Edit appointment details">
+                <i class="fa fa-edit"></i> Edit
+              </a>
+              
+			  <a href="javascript:deleteUser('<?php echo $user_id ?>');" class="btn btn-default btn-xs" title="Delete this appointment">
+                <i class="fa fa-trash"></i> Delete
+              </a>
+            </div>
           </td>
 		  <?php } ?>
         </tr>
         <?php } ?>
-      </table>
+        </table>
+      </div>
     </div>
     <!-- /.box-body -->
     <div class="box-footer clearfix">
@@ -80,19 +100,38 @@ if($type == 'admin') {
 
 <script language="javascript">
 function approve(userId) {
-	if(confirm('Are you sure you wants to Approve it ?')) {
+	if(confirm('Are you sure you want to approve this appointment?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=regConfirm&action=approve&userId='+userId;
 	}
 }
+
 function decline(userId) {
 	if(confirm('Are you sure you want to decline this appointment?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=regConfirm&action=denide&userId='+userId;
 	}
 }
+
 function deleteUser(userId) {
 	if(confirm('Deleting this record will also remove the appointment from calendar.\n\nAre you sure you want to proceed?')) {
 		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=delete&userId='+userId;
 	}
 }
 
+function sendReminder(userId) {
+	if(confirm('Send appointment reminder email to this client?\n\nThis will send a detailed reminder about their upcoming appointment.')) {
+		// Show loading state
+		var reminderBtn = event.target.closest('a');
+		var originalText = reminderBtn.innerHTML;
+		reminderBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+		reminderBtn.style.pointerEvents = 'none';
+		
+		// Send reminder
+		window.location.href = '<?php echo WEB_ROOT; ?>api/process.php?cmd=sendReminder&userId='+userId;
+	}
+}
+
+function editAppointment(userId) {
+	// Redirect to edit form
+	window.location.href = '<?php echo WEB_ROOT; ?>views/?v=EDIT&ID='+userId;
+}
 </script>
