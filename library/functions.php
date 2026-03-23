@@ -72,7 +72,7 @@ function getBookingRecords(){
 	$page = (isset($_GET['page']) && $_GET['page'] != '') ? $_GET['page'] : 1;
 	$start 	= ($page-1)*$per_page;
 	$sql 	= "SELECT u.id AS uid, u.name, u.phone, u.email,
-			   a.pet_name, a.pet_type, a.appointment_date, a.appointment_type, a.status, a.comments   
+			   a.id AS appointment_id, a.pet_name, a.pet_type, a.appointment_date, a.appointment_type, a.status, a.comments   
 			   FROM tbl_users u, tbl_appointments a 
 			   WHERE u.id = a.uid  
 			   ORDER BY a.id DESC LIMIT $start, $per_page";
@@ -82,6 +82,7 @@ function getBookingRecords(){
 	while($row = dbFetchAssoc($result)) {
 		extract($row);
 		$records[] = array("user_id" => $uid,
+							"appointment_id" => $appointment_id,
 							"user_name" => $name,
 							"user_phone" => $phone,
 							"user_email" => $email,

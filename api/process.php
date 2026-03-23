@@ -45,6 +45,10 @@ switch($cmd) {
 		updateAppointment();
 	break;
 	
+	case 'cancelAppointment':
+		cancelAppointment();
+	break;
+	
 	default :
 	break;
 }
@@ -134,7 +138,12 @@ function regConfirm() {
 	$action 	= $_GET['action'];
 	$stat		= ($action == 'approve') ? 'APPROVED' : 'DENIED';
 	
-	$sql		= "UPDATE tbl_appointments SET status = '$stat' WHERE uid = $userId";
+	// Update appointment status and set approved_date if approving
+	if ($stat == 'APPROVED') {
+		$sql = "UPDATE tbl_appointments SET status = '$stat', approved_date = NOW() WHERE uid = $userId";
+	} else {
+		$sql = "UPDATE tbl_appointments SET status = '$stat' WHERE uid = $userId";
+	}
 	dbQuery($sql);
 	
 	//Get user and appointment details for email
@@ -426,6 +435,141 @@ function updateAppointment() {
 	}
 	
 	header('Location: ../views/?v=LIST&msg=' . urlencode($message));
+	exit();
+}
+
+function cancelAppointment() {
+	// Check if user is logged in
+	if (!isset($_SESSION['calendar_fd_user'])) {
+		http_response_code(401);
+		echo json_encode(array('error' => 'Not authenticated'));
+		exit();
+	}
+	
+	$appointmentId = (int)$_POST['appointmentId'];
+	$reason = isset($_POST['reason']) ? trim($_POST['reason']) : '';
+	$userId = $_SESSION['calendar_fd_user']['id'];
+	$userType = $_SESSION['calendar_fd_user']['type'];
+	$isAdminCancel = isset($_POST['adminCancel']) && $_POST['adminCancel'];
+	
+	// Validate appointment ID
+	if ($appointmentId <= 0) {
+		http_response_code(400);
+		echo json_encode(array('error' => 'Invalid appointment ID'));
+		exit();
+	}
+	
+	// Get appointment details and verify ownership/permissions
+	$sql = "SELECT a.*, u.name, u.email 
+			FROM tbl_appointments a 
+			JOIN tbl_users u ON a.uid = u.id 
+			WHERE a.id = $appointmentId";
+	
+	// If user is a client, they can only cancel their own appointments
+	if ($userType === 'client') {
+		$sql .= " AND a.uid = $userId";
+	}
+	
+	$result = dbQuery($sql);
+	
+	if (!$result || dbNumRows($result) == 0) {
+		http_response_code(404);
+		echo json_encode(array('error' => 'Appointment not found or access denied'));
+		exit();
+	}
+	
+	$appointment = dbFetchAssoc($result);
+	
+	// Check if appointment can be cancelled
+	if ($appointment['status'] === 'CANCELLED') {
+		http_response_code(400);
+		echo json_encode(array('error' => 'Appointment is already cancelled'));
+		exit();
+	}
+	
+	if ($appointment['status'] === 'DENIED') {
+		http_response_code(400);
+		echo json_encode(array('error' => 'Cannot cancel a denied appointment'));
+		exit();
+	}
+	
+	// Check if appointment is in the past (only for non-admin users)
+	if ($userType === 'client' && strtotime($appointment['appointment_date']) < time()) {
+		http_response_code(400);
+		echo json_encode(array('error' => 'Cannot cancel past appointments'));
+		exit();
+	}
+	
+	// For approved appointments, check 24-hour rule (only for clients, not admin/staff)
+	if ($userType === 'client' && $appointment['status'] === 'APPROVED' && $appointment['approved_date']) {
+		$approvedTime = strtotime($appointment['approved_date']);
+		$currentTime = time();
+		$hoursSinceApproval = ($currentTime - $approvedTime) / 3600;
+		
+		if ($hoursSinceApproval > 24) {
+			http_response_code(400);
+			echo json_encode(array('error' => 'Cannot cancel appointment. 24-hour cancellation period has expired.'));
+			exit();
+		}
+	}
+	
+	// Admin/Staff cancellations require a reason
+	if (($userType === 'admin' || $userType === 'staff') && empty($reason)) {
+		http_response_code(400);
+		echo json_encode(array('error' => 'Cancellation reason is required for staff cancellations'));
+		exit();
+	}
+	
+	// Update appointment status to cancelled
+	$updateSql = "UPDATE tbl_appointments SET 
+				  status = 'CANCELLED',
+				  cancelled_date = NOW(),
+				  cancelled_by = $userId,
+				  cancellation_reason = '" . addslashes($reason) . "'
+				  WHERE id = $appointmentId";
+	
+	if (!dbQuery($updateSql)) {
+		http_response_code(500);
+		echo json_encode(array('error' => 'Failed to cancel appointment'));
+		exit();
+	}
+	
+	// Determine who cancelled the appointment for email
+	$cancelledBy = 'You';
+	if ($userType === 'admin' || $userType === 'staff') {
+		$cancelledBy = 'The clinic staff';
+	}
+	
+	// Send cancellation email
+	$emailMsg = get_email_msg(array(
+		'msg' => 'appointment_cancelled',
+		'name' => $appointment['name'],
+		'pet_name' => $appointment['pet_name'],
+		'appointment_date' => date('l, F j, Y \a\t g:i A', strtotime($appointment['appointment_date'])),
+		'appointment_type' => $appointment['appointment_type'],
+		'reason' => $reason ? $reason : 'No reason provided',
+		'cancelled_by' => $cancelledBy
+	));
+	
+	$emailData = array(
+		'to' => $appointment['email'], 
+		'sub' => 'Appointment Cancelled - ' . $appointment['pet_name'], 
+		'msg' => $emailMsg
+	);
+	
+	send_email($emailData);
+	
+	// Log the cancellation
+	$logSql = "INSERT INTO tbl_appointment_reminders (appointment_id, sent_date, sent_by, email_status) 
+			   VALUES ($appointmentId, NOW(), $userId, 'cancelled')";
+	dbQuery($logSql);
+	
+	// Return success response
+	header('Content-Type: application/json');
+	echo json_encode(array(
+		'success' => true,
+		'message' => 'Appointment cancelled successfully'
+	));
 	exit();
 }
 

@@ -30,12 +30,6 @@ if (isset($_POST['name']) && isset($_POST['pwd'])) {
     <link rel="stylesheet" href="<?php echo WEB_ROOT;?>dist/css/AdminLTE.css">
     <!-- Modern Theme -->
     <link rel="stylesheet" href="<?php echo WEB_ROOT;?>dist/css/modern-theme.css">
-    
-	<link href="<?php echo WEB_ROOT; ?>library/spry/textfieldvalidation/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-	<script src="<?php echo WEB_ROOT; ?>library/spry/textfieldvalidation/SpryValidationTextField.js" type="text/javascript"></script>
-	
-	<link href="<?php echo WEB_ROOT; ?>library/spry/passwordvalidation/SpryValidationPassword.css" rel="stylesheet" type="text/css" />
-	<script src="<?php echo WEB_ROOT; ?>library/spry/passwordvalidation/SpryValidationPassword.js" type="text/javascript"></script>
 
     <style>
       /* Modern Login Page Styles - Reference Design */
@@ -138,15 +132,21 @@ if (isset($_POST['name']) && isset($_POST['pwd'])) {
       }
       
       /* Validation Styles */
-      .textfieldRequiredMsg,
-      .textfieldMinCharsMsg,
-      .passwordRequiredMsg,
-      .passwordMinCharsMsg,
-      .passwordMaxCharsMsg {
+      .validation-message {
         color: var(--danger-color);
         font-size: 12px;
         margin-top: 5px;
         display: block;
+      }
+      
+      .form-control.is-invalid {
+        border-color: var(--danger-color);
+        box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+      }
+      
+      .form-control.is-valid {
+        border-color: var(--success-color);
+        box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.1);
       }
       
       /* Animation */
@@ -201,27 +201,24 @@ if (isset($_POST['name']) && isset($_POST['pwd'])) {
         	<i class="fa fa-exclamation-triangle"></i> <?php echo $errorMessage; ?>
 		</div>
 		<?php } ?>
-        <form action="" method="post">
+        <form action="" method="post" id="loginForm">
           <div class="form-group has-feedback">
-		  	<span id="sprytf_name"> 
-            <input type="text" name="name" class="form-control" placeholder="Enter your username">
+            <input type="text" name="name" class="form-control" placeholder="Enter your username" required minlength="4" id="username">
             <span class="fa fa-user form-control-feedback"></span>
-			<span class="textfieldRequiredMsg">Username is required.</span>
-			<span class="textfieldMinCharsMsg">Username must be at least 4 characters.</span>
-			</span>
+            <div class="validation-message" id="usernameError" style="display: none; color: #e74c3c; font-size: 12px; margin-top: 5px;">
+              Username is required (minimum 4 characters).
+            </div>
           </div>
           <div class="form-group has-feedback">
-		  	<span id="sprytf_pwd"> 
-            <input type="password" name="pwd" class="form-control" placeholder="Enter your password">
+            <input type="password" name="pwd" class="form-control" placeholder="Enter your password" required minlength="4" maxlength="12" id="password">
             <span class="fa fa-lock form-control-feedback"></span>
-			<span class="passwordRequiredMsg">Password is required.</span>
-			<span class="passwordMinCharsMsg">Password must be at least 4 characters.</span>
-			<span class="passwordMaxCharsMsg">Password cannot exceed 12 characters.</span>
-			</span>
+            <div class="validation-message" id="passwordError" style="display: none; color: #e74c3c; font-size: 12px; margin-top: 5px;">
+              Password is required (4-12 characters).
+            </div>
           </div>
           <div class="row">
             <div class="col-xs-12">
-              <button type="submit" class="btn btn-primary btn-block">
+              <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
                 <i class="fa fa-sign-in"></i> Sign In
               </button>
             </div><!-- /.col -->
@@ -238,10 +235,78 @@ if (isset($_POST['name']) && isset($_POST['pwd'])) {
     </div><!-- /.login-box -->
 
   </body>
-<script>
-<!--
-var sprytf_name = new Spry.Widget.ValidationTextField("sprytf_name", "none", {minChars:4, validateOn:["blur", "change"]});
-var sprytf_pwd = new Spry.Widget.ValidationPassword("sprytf_pwd", {minChars:4, maxChars: 12, validateOn:["blur", "change"]});
-//-->
-</script>
+  
+  <!-- jQuery for enhanced validation -->
+  <script src="<?php echo WEB_ROOT; ?>plugins/jQuery/jQuery-2.1.4.min.js"></script>
+  <script>
+  $(document).ready(function() {
+      // Clean form validation without auto-triggering
+      $('#loginForm').on('submit', function(e) {
+          var isValid = true;
+          
+          // Clear previous validation states
+          $('.validation-message').hide();
+          $('.form-control').removeClass('is-invalid is-valid');
+          
+          // Validate username
+          var username = $('#username').val().trim();
+          if (username.length < 4) {
+              $('#usernameError').show();
+              $('#username').addClass('is-invalid');
+              isValid = false;
+          } else {
+              $('#username').addClass('is-valid');
+          }
+          
+          // Validate password
+          var password = $('#password').val();
+          if (password.length < 4 || password.length > 12) {
+              $('#passwordError').show();
+              $('#password').addClass('is-invalid');
+              isValid = false;
+          } else {
+              $('#password').addClass('is-valid');
+          }
+          
+          if (!isValid) {
+              e.preventDefault();
+              return false;
+          }
+          
+          // Show loading state
+          $('#loginBtn').html('<i class="fa fa-spinner fa-spin"></i> Signing In...').prop('disabled', true);
+          
+          return true;
+      });
+      
+      // Optional: Real-time validation on blur (but not on page load)
+      $('#username, #password').on('blur', function() {
+          if ($(this).val().length > 0) {
+              // Only validate if user has started typing
+              var field = $(this);
+              var isValid = true;
+              
+              if (field.attr('id') === 'username' && field.val().trim().length < 4) {
+                  isValid = false;
+              } else if (field.attr('id') === 'password' && (field.val().length < 4 || field.val().length > 12)) {
+                  isValid = false;
+              }
+              
+              if (isValid) {
+                  field.removeClass('is-invalid').addClass('is-valid');
+                  field.siblings('.validation-message').hide();
+              } else {
+                  field.removeClass('is-valid').addClass('is-invalid');
+                  field.siblings('.validation-message').show();
+              }
+          }
+      });
+      
+      // Clear validation on focus
+      $('#username, #password').on('focus', function() {
+          $(this).removeClass('is-invalid is-valid');
+          $(this).siblings('.validation-message').hide();
+      });
+  });
+  </script>
 </html>

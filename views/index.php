@@ -55,6 +55,11 @@ switch ($view) {
 	case 'SETTINGS' :
 		$content 	= 'settings.php';		
 		$pageTitle 	= 'System Settings';
+		break;
+		
+	case 'MYAPPOINTMENTS' :
+		$content 	= 'my_appointments.php';		
+		$pageTitle 	= 'My Appointments';
 		break;	
 	
 	default :

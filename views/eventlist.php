@@ -67,6 +67,12 @@ if($type == 'admin') {
               </a>
               <?php } ?>
               
+              <?php if($status != "CANCELLED" && strtotime($appointment_date) > time()) { ?>
+              <a href="javascript:cancelAppointmentAdmin('<?php echo $appointment_id; ?>', '<?php echo htmlspecialchars($user_name); ?>', '<?php echo htmlspecialchars($pet_name); ?>');" class="btn btn-warning btn-xs" title="Cancel this appointment">
+                <i class="fa fa-ban"></i> Cancel
+              </a>
+              <?php } ?>
+              
               <a href="javascript:editAppointment('<?php echo $user_id ?>');" class="btn btn-info btn-xs btn-edit" title="Edit appointment details">
                 <i class="fa fa-edit"></i> Edit
               </a>
@@ -134,4 +140,96 @@ function editAppointment(userId) {
 	// Redirect to edit form
 	window.location.href = '<?php echo WEB_ROOT; ?>views/?v=EDIT&ID='+userId;
 }
+
+function cancelAppointmentAdmin(appointmentId, ownerName, petName) {
+	// Set up the modal with appointment details
+	$('#cancelOwnerName').text(ownerName);
+	$('#cancelPetName').text(petName);
+	$('#adminCancellationReason').val('');
+	
+	// Store appointment ID for later use
+	window.appointmentToCancel = appointmentId;
+	
+	// Show the modal
+	$('#adminCancelModal').modal('show');
+}
+
+// Handle admin cancellation confirmation
+$(document).ready(function() {
+	$('#confirmAdminCancelBtn').on('click', function() {
+		if (window.appointmentToCancel) {
+			var reason = $('#adminCancellationReason').val().trim();
+			
+			// Show loading state
+			$(this).html('<i class="fa fa-spinner fa-spin"></i> Cancelling...').prop('disabled', true);
+			
+			// Send cancellation request
+			$.ajax({
+				url: '<?php echo WEB_ROOT; ?>api/process.php',
+				method: 'POST',
+				data: {
+					cmd: 'cancelAppointment',
+					appointmentId: window.appointmentToCancel,
+					reason: reason,
+					adminCancel: true
+				},
+				success: function(response) {
+					$('#adminCancelModal').modal('hide');
+					alert('Appointment has been cancelled successfully. The client will receive a notification email.');
+					location.reload();
+				},
+				error: function(xhr) {
+					var errorMsg = 'Error cancelling appointment. Please try again.';
+					try {
+						var errorData = JSON.parse(xhr.responseText);
+						errorMsg = errorData.error || errorMsg;
+					} catch(e) {}
+					
+					alert(errorMsg);
+					$('#confirmAdminCancelBtn').html('<i class="fa fa-ban"></i> Yes, Cancel Appointment').prop('disabled', false);
+				}
+			});
+		}
+	});
+	
+	// Reset modal when closed
+	$('#adminCancelModal').on('hidden.bs.modal', function() {
+		window.appointmentToCancel = null;
+		$('#confirmAdminCancelBtn').html('<i class="fa fa-ban"></i> Yes, Cancel Appointment').prop('disabled', false);
+	});
+});
 </script>
+
+<!-- Admin Cancel Appointment Modal -->
+<div class="modal fade" id="adminCancelModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><i class="fa fa-ban"></i> Cancel Appointment</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel the appointment for:</p>
+        <div class="alert alert-info">
+          <strong>Pet Owner:</strong> <span id="cancelOwnerName"></span><br>
+          <strong>Pet Name:</strong> <span id="cancelPetName"></span>
+        </div>
+        <div class="form-group">
+          <label for="adminCancellationReason">Reason for cancellation:</label>
+          <textarea class="form-control" id="adminCancellationReason" rows="3" 
+                    placeholder="Please provide a reason for the cancellation (will be sent to the client)..." required></textarea>
+        </div>
+        <div class="alert alert-warning">
+          <i class="fa fa-exclamation-triangle"></i>
+          <strong>Note:</strong> The client will receive an email notification about this cancellation.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Keep Appointment</button>
+        <button type="button" class="btn btn-danger" id="confirmAdminCancelBtn">
+          <i class="fa fa-ban"></i> Yes, Cancel Appointment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

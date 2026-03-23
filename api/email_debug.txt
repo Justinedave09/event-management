@@ -98,3 +98,43 @@ Current SMTP Port: 587
 Sendmail From: chua.j.d.bscs@gmail.com
 Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
 -------------------
+
+2026-03-23 01:01:34 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Veterinary Appointment Confirmation - Pending
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-03-23 01:02:46 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Veterinary Appointment CONFIRMED
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-03-23 01:14:28 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Veterinary Appointment Confirmation - Pending
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-03-23 01:15:04 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Veterinary Appointment CONFIRMED
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------

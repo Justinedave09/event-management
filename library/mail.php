@@ -188,6 +188,48 @@ function get_email_msg($data) {
 				$data['name'], $clinic_name, $data['pet_name'], $data['pet_type'], $data['appointment_date'], $data['appointment_type'], $data['pet_name'], $clinic_name);
 		break;
 		
+		case 'appointment_cancelled':
+			$msg_text = sprintf("
+			<html>
+			<head><title>Appointment Cancelled</title></head>
+			<body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+				<div style='max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;'>
+					<div style='background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);'>
+						<h2 style='color: #e53e3e; text-align: center; margin-bottom: 30px;'>❌ Appointment Cancelled</h2>
+						<p>Dear <strong>%s</strong>,</p>
+						<p>Your appointment has been cancelled. Here are the details:</p>
+						
+						<div style='background: #f8f9fa; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #e53e3e;'>
+							<h3 style='color: #2d3748; margin-top: 0;'>📋 Cancelled Appointment Details</h3>
+							<p><strong>Pet Name:</strong> %s</p>
+							<p><strong>Original Date & Time:</strong> %s</p>
+							<p><strong>Service:</strong> %s</p>
+							<p><strong>Cancelled By:</strong> %s</p>
+							<p><strong>Cancellation Reason:</strong> %s</p>
+						</div>
+						
+						<div style='background: #e6fffa; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #38a169;'>
+							<strong>💚 We're Here When You Need Us</strong><br/>
+							We understand that sometimes plans change. Feel free to book a new appointment whenever you're ready. 
+							Your pet's health and your convenience are our top priorities.
+						</div>
+						
+						<div style='text-align: center; margin: 30px 0; padding: 20px; background: #f7fafc; border-radius: 6px;'>
+							<strong>📞 Need to book a new appointment?</strong><br/>
+							Contact us or visit our website anytime.
+						</div>
+						
+						<p>Thank you for choosing <strong>%s</strong>. We look forward to caring for your pet in the future.</p>
+						<p>Best regards,<br/>
+						<strong>%s Team</strong></p>
+					</div>
+				</div>
+			</body>
+			</html>", 
+				$data['name'], $data['pet_name'], $data['appointment_date'], $data['appointment_type'], 
+				isset($data['cancelled_by']) ? $data['cancelled_by'] : 'You', $data['reason'], $clinic_name, $clinic_name);
+		break;
+		
 		case 'register':
 			$msg_text = $data['body'];
 		break;
