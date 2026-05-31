@@ -303,7 +303,107 @@ function get_email_msg($data) {
 			</html>", 
 				$data['name'], $data['pet_name'], $data['appointment_date'], $data['appointment_type'], $clinic_name);
 		break;
-		
+		case 'announcement':
+    $clinic_phone = getSystemSetting('clinic_phone', '');
+    $clinic_email_addr = getSystemSetting('clinic_email', EMAIL_FROM_ADDRESS);
+    
+    // Type badges
+    $typeBadges = [
+        'event'   => ['emoji' => '📅', 'color' => '#3c8dbc', 'label' => 'EVENT'],
+        'promo'   => ['emoji' => '🏷️', 'color' => '#00a65a', 'label' => 'SPECIAL OFFER'],
+        'holiday' => ['emoji' => '🎁', 'color' => '#f39c12', 'label' => 'HOLIDAY NOTICE'],
+        'urgent'  => ['emoji' => '⚠️', 'color' => '#dd4b39', 'label' => 'URGENT'],
+        'general' => ['emoji' => '📢', 'color' => '#605ca8', 'label' => 'ANNOUNCEMENT'],
+    ];
+    $badge = $typeBadges[$data['type']] ?? $typeBadges['general'];
+    
+    $title    = htmlspecialchars($data['title']);
+    $content  = nl2br(htmlspecialchars($data['content']));
+    $name     = htmlspecialchars($data['name']);
+    $imageUrl = $data['image_url'] ?? '';
+    
+    // Build date range
+    $dateRange = '';
+    if (!empty($data['start_date']) || !empty($data['end_date'])) {
+        $dateRange = "<div style='background:#f5f5f5; padding:12px; border-radius:6px; margin-top:15px; font-size:13px;'>";
+        $dateRange .= "<strong>📅 Valid:</strong> ";
+        if (!empty($data['start_date'])) {
+            $dateRange .= date('F d, Y', strtotime($data['start_date']));
+        }
+        if (!empty($data['end_date'])) {
+            $dateRange .= " until " . date('F d, Y', strtotime($data['end_date']));
+        }
+        $dateRange .= "</div>";
+    }
+    
+    // Build image block
+    $imageBlock = '';
+    if (!empty($imageUrl)) {
+        $imageBlock = "<img src='" . htmlspecialchars($imageUrl) . "' 
+                       style='max-width:100%; height:auto; border-radius:6px; margin:15px 0;' 
+                       alt='Announcement'>";
+    }
+    
+    $msg_text = sprintf("
+    <html>
+    <head><title>%s</title></head>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; background:#f4f4f4; margin:0; padding:20px;'>
+        <div style='max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);'>
+            
+            <!-- Header -->
+            <div style='background: %s; padding: 25px 30px; color: #fff;'>
+                <div style='font-size: 12px; opacity: 0.9; letter-spacing: 1px; margin-bottom: 5px;'>
+                    %s %s
+                </div>
+                <h1 style='margin: 0; font-size: 24px; color: #fff;'>%s</h1>
+            </div>
+            
+            <!-- Body -->
+            <div style='padding: 30px;'>
+                <p style='font-size: 14px; color: #555; margin: 0 0 15px;'>
+                    Hi <strong>%s</strong>,
+                </p>
+                
+                <div style='font-size: 15px; line-height: 1.7; color: #333;'>
+                    %s
+                </div>
+                
+                %s
+                %s
+                
+                <hr style='margin: 25px 0; border: none; border-top: 1px solid #eee;'>
+                
+                <div style='background: #fafafa; padding: 15px; border-radius: 6px; font-size: 13px; color: #666;'>
+                    <strong>📍 %s</strong><br/>
+                    <span style='color: #999;'>Need to book an appointment or have questions?</span><br/>
+                    <strong>📞 Phone:</strong> %s<br/>
+                    <strong>✉️ Email:</strong> %s
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style='background: #f9f9f9; padding: 15px 30px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #eee;'>
+                You're receiving this because you're a registered pet owner at %s.<br/>
+                © %s • All rights reserved
+            </div>
+        </div>
+    </body>
+    </html>",
+        $title,
+        $badge['color'],
+        $badge['emoji'], $badge['label'],
+        $title,
+        $name,
+        $content,
+        $imageBlock,
+        $dateRange,
+        $clinic_name,
+        $clinic_phone,
+        $clinic_email_addr,
+        $clinic_name,
+        $clinic_name
+    );
+break;
 		case 'register':
 			$msg_text = $data['body'];
 		break;

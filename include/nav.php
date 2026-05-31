@@ -12,6 +12,11 @@
 		</a>
 	</li>
     <li class="dropdown user user-menu"> 
+      <a href="<?php echo WEB_ROOT; ?>index.php?v=CHAT"> 
+      <span class="hidden-xs"><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;AI Chat</span> 
+      </a>
+    </li>
+    <li class="dropdown user user-menu"> 
 	<a href="<?php echo WEB_ROOT; ?>?logout"> 
 	<span class="hidden-xs"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;Log Out</span> 
 	</a>

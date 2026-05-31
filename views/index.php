@@ -17,6 +17,11 @@ switch ($view) {
 		$pageTitle 	= 'Edit Appointment';
 		break;
 
+	case 'ANNOUNCEMENTS':
+		$content   = 'announcements.php';
+		$pageTitle = 'Announcements';
+    	break;
+
 	case 'USERS' :
 		$content 	= 'userlist.php';		
 		$pageTitle 	= 'View Pet Owners';
@@ -61,6 +66,11 @@ switch ($view) {
 		$content 	= 'my_appointments.php';		
 		$pageTitle 	= 'My Appointments';
 		break;	
+
+	case 'CHAT' :
+		$content 	= 'chat.php';
+		$pageTitle 	= 'AI Chat';
+		break;
 	
 	default :
 		$content 	= 'dashboard.php';		

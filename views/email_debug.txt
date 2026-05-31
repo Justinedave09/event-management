@@ -58,3 +58,63 @@ Current SMTP Port: 587
 Sendmail From: chua.j.d.bscs@gmail.com
 Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
 -------------------
+
+2026-05-31 17:17:37 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: Welcome to Veterinary Clinic
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-05-31 17:18:30 - EMAIL ATTEMPT
+To: justinechua0921@gmail.com
+Subject: Password Updated - Veterinary Clinic
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-05-31 18:08:50 - EMAIL ATTEMPT
+To: justinechua0921@gmail.com
+Subject: 🏷️ ? Grand Opening Promo!
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-05-31 18:08:55 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: 🏷️ ? Grand Opening Promo!
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-05-31 18:27:13 - EMAIL ATTEMPT
+To: justinechua0921@gmail.com
+Subject: 📅 ? Free Pet Health Workshop
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
+
+2026-05-31 18:27:18 - EMAIL ATTEMPT
+To: chua.j.d.bscs@gmail.com
+Subject: 📅 ? Free Pet Health Workshop
+PHP mail() returned: TRUE
+Current SMTP: smtp.gmail.com
+Current SMTP Port: 587
+Sendmail From: chua.j.d.bscs@gmail.com
+Sendmail Path: "C:\xampp\sendmail\sendmail.exe" -t
+-------------------
